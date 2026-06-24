@@ -1,3 +1,9 @@
+<% if @event.private && !(@event.creator == current_user || @event.invited_users.include?(current_user)) %>
+  <h1>Private Event</h1>
+  <p>You must be invited by the host to view this evetn's details.</p>
+  <%= link_to "Back to All Events", root_path %>
+<% else %>
+
 <article class="event-details">
   <h1><%= @event.title %></h1>
   <p class="event-meta">
@@ -25,12 +31,32 @@
       <% else %>
         <%= button_to "📅 Attend This Event", event_attendances_path(event_id: @event.id), method: :post, class: "btn btn-primary" %>
       <% end %>
-    <% else %>
-      <p><%= link_to "Sign in", new_user_session_path %> to RSVP for this event.</p>
     <% end %>
   </div>
 
   <hr>
+
+  <% if @event.creator == current_user %>
+    <h3>Invite Guests</h3>
+    <%= form_with(scope: :invitation, url: event_invitations_path(@event), local: true) do | f | %>
+      <div class="field">
+        <%= f.label :email, "Invitee's Email Address" %><br>
+        <%= f.email_field :email, placeholder: "guest@example.com", required: true %>
+        <%= f.submit "Send Invitation" %>
+      </div>
+    <% end %>
+
+    <h4>Invited Guests Status</h4>
+    <ul>
+      <% @event.invited_users.each do | user | %>
+        <li>
+          <%= user.name %>
+          (<%= @event.attendees.include?(user) ? "✅ Attending" : "⏳ Pending RSVP" %>)
+        </li>
+      <% end %>
+    </ul>
+    <hr>
+  <% end %>
 
   <h3>👥 Who's Coming (<%= @event.attendees.count %>)</h3>
   <% if @event.attendees.any? %>

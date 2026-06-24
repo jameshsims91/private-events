@@ -3,9 +3,12 @@ Rails.application.routes.draw do
 
   devise_for :users
 
-  resources :events, only: [ :new, :create, :show, :index ]
-  resources :users, only: [ :show ]
+  resources :events, only: [ :new, :create, :show, :index ] do
+    resources :invitations, only: [ :create ]
+  end
+
   resources :event_attendances, only: [ :create, :destroy ]
+  resources :users, only: [ :show ]
 
   get "profile", to: "users#profile", as: :profile
   get "events/index"
