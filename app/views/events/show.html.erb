@@ -1,0 +1,23 @@
+<article class="event-details">
+  <h1><%= @event.title %></h1>
+
+  <p class="event-meta">
+    <strong>Hosted by:</strong>
+    <%= link_to @event.creator.name, user_path(@event.creator) %>
+  </p>
+
+  <p class="event-date">
+    <strong>Date:</strong>
+    <%= @event.date.strftime("%B %d, %Y") if @event.date %>
+  </p>
+
+  <% if @event.respond_to?(:description) && @event.description.present? %>
+    <div class="event-description">
+      <strong>Description:</strong>
+      <p><%= @event.description %></p>
+    </div>
+  <% end %>
+
+  <hr>
+  <%= link_to "Back to Profile", user_path(@event.creator) %>
+</article>

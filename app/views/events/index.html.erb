@@ -1,4 +1,15 @@
 <h1>Current Events</h1>
 <% @events.each do | event | %>
-  <p><%= event.name %> (Min Age: <%= event.min_age %>) </p>
+  <p>
+    <strong><%= link_to event.title, event_path(event) %></strong>
+    (Hosted by: <%= event.creator.name %> on <%= event.date.strftime("%B %d, %Y") if event.date %>
+  </p>
+<% end %>
+
+<hr>
+
+<% if user_signed_in? %>
+  <%= link_to "➕ Create New Event", new_event_path %>
+<% else %>
+  <p><%= link_to "Sign In", new_user_session_path %> or <%= link_to "Sign Up", new_user_registration_path %> to create an even.</p>
 <% end %>

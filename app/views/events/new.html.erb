@@ -1,0 +1,38 @@
+<h1>Create a New Event</h1>
+
+<%= form_with model: @event, class: "event-form" do | form | %>
+  <% if @event.errors.any? %>
+    <div id="error_exlplanation" style="color: red;">
+      <h2><%= pluralize(@event.errors.count, "error") %> prohibited this event from being saved:</h2>
+      <ul>
+        <% @event.errors.full_messages.each do | msg | %>
+          <li><% msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.lable :title %>
+    <%= f.text_field :title, required: true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :date %>
+    <%= f.datetime_field :date, required: true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :location %>
+    <%= f.text_field :location, required: true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :description %>
+    <%= f.text_area :description, rows: 5 %>
+
+  <div class="actions">
+    <%= f.submit "Create Event" %>
+  </div>
+
+  <%= link_to "Back to Events", events_path %>
