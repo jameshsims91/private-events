@@ -7,6 +7,16 @@
   <article class="event-details">
     <h1><%= @event.title %></h1>
 
+    <% if @event.creator == current_user %>
+      <div class="creator-controls" style="background: #edf2f7; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+        <strong>Host Tools:</strong>
+        <%= link_to "Edit Event Details", edit_event_path(@event) %> |
+        <%= link_to "Delete Event", event_path(@event), 
+                    data: {turbo_method: :delete, turbo_confirm: "Are you sure you want to permanently delete this event?" }, 
+                    style: "color: #e53e3e;" %>
+      </div>
+    <% end %>
+    
     <p class="event-meta">
       <strong>Hosted by:</strong>
       <%= link_to @event.creator.name, user_path(@event.creator) %>
@@ -70,16 +80,6 @@
       </ul>
     <% else %>
       <p>No attendees yet. Be the first to join!</p>
-    <% end %>
-
-    <% if @event.creator == current_user %>
-      <div class="creator-controls" style="background: #edf2f7; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
-        <strong>Host Tools:</strong>
-        <%= link_to "Edit Event Details", edit_event_path(@event) %> |
-        <%= link_to "Delete Event", event_path(@event), 
-                    data: {turbo_method: :delete, turbo_confirm: "Are you sure you want to permanently delete this event?" }, 
-                    style: "color: #e53e3e;" %>
-      </div>
     <% end %>
   
   </article>

@@ -2,8 +2,24 @@ class EventsController < ApplicationController
   before_action :authenticate_user!, only: [ :new, :create, :edit, :update, :destroy ]
   before_action :ensure_creator, only: [ :edit, :update, :destroy ]
   def index
-    @upcoming_events = Event.upcoming
-    @past_events = Event.past
+    if user_signed_in?
+      @upcoming_events = Event.where("date >= ?", Date.today)
+                              .where("private = ? OR creator_id = ? OR id IN (?)",
+                                    false,
+                                    current_user.id,
+                                    current_user.invited_event_ids)
+                              .order(date: :asc)
+
+      @past_events = Event.where("date < ?", Date.today)
+                          .where("private = ? OR creator_id = ? OR id IN (?)",
+                                false,
+                                current_user.id,
+                                current_user.invited_event_ids)
+                          .order(date: :desc)
+    else
+      @upcoming_events = Event.upcoming
+      @past_events = Event.past
+    end
   end
 
   def new
