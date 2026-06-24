@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_action :protect_from_forgery, :authenticate_user!, except: [ :index, :new, :create ]
+  before_action :authenticate_user!, except: [ :index, :new, :create ]
   def index
     @upcoming_events = Event.upcoming
     @past_events = Event.past
