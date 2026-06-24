@@ -4,71 +4,86 @@
   <%= link_to "Back to All Events", root_path %>
 <% else %>
 
-<article class="event-details">
-  <h1><%= @event.title %></h1>
-  <p class="event-meta">
-    <strong>Hosted by:</strong>
-    <%= link_to @event.creator.name, user_path(@event.creator) %>
-  </p>
-  <p class="event-date">
-    <strong>Date:</strong>
-    <%= @event.date.strftime("%B %d, %Y") if @event.date %>
-  </p>
-  <% if @event.respond_to?(:description) && @event.description.present? %>
-    <div class="event-description">
-      <strong>Description:</strong>
-      <p><%= @event.description %></p>
-    </div>
-  <% end %>
+  <article class="event-details">
+    <h1><%= @event.title %></h1>
 
-  <div class="rsvp-actions">
-    <% if user_signed_in? %>
-      <% if @event.creator == current_user %>
-        <p class="badge host">⭐ You are hosting this event</p>
-      <% elsif @event.attendees.include?(current_user) %>
-        <% attendance = @event.event_attendances.find_by(attendee: current_user) %>
-        <%= button_to "❌ Cancel Attendance", event_attendance_path(attendance), method: :delete, class: "btn btn-danger" %>
-      <% else %>
-        <%= button_to "📅 Attend This Event", event_attendances_path(event_id: @event.id), method: :post, class: "btn btn-primary" %>
-      <% end %>
-    <% end %>
-  </div>
+    <p class="event-meta">
+      <strong>Hosted by:</strong>
+      <%= link_to @event.creator.name, user_path(@event.creator) %>
+    </p>
 
-  <hr>
+    <p class="event-date">
+      <strong>Date:</strong>
+      <%= @event.date.strftime("%B %d, %Y") if @event.date %>
+    </p>
 
-  <% if @event.creator == current_user %>
-    <h3>Invite Guests</h3>
-    <%= form_with(scope: :invitation, url: event_invitations_path(@event), local: true) do | f | %>
-      <div class="field">
-        <%= f.label :email, "Invitee's Email Address" %><br>
-        <%= f.email_field :email, placeholder: "guest@example.com", required: true %>
-        <%= f.submit "Send Invitation" %>
+    <% if @event.respond_to?(:description) && @event.description.present? %>
+      <div class="event-description">
+        <strong>Description:</strong>
+        <p><%= @event.description %></p>
       </div>
     <% end %>
 
-    <h4>Invited Guests Status</h4>
-    <ul>
-      <% @event.invited_users.each do | user | %>
-        <li>
-          <%= user.name %>
-          (<%= @event.attendees.include?(user) ? "✅ Attending" : "⏳ Pending RSVP" %>)
-        </li>
+    <div class="rsvp-actions">
+      <% if user_signed_in? %>
+        <% if @event.creator == current_user %>
+          <p class="badge host">⭐ You are hosting this event</p>
+        <% elsif @event.attendees.include?(current_user) %>
+          <% attendance = @event.event_attendances.find_by(attendee: current_user) %>
+          <%= button_to "❌ Cancel Attendance", event_attendance_path(attendance), method: :delete, class: "btn btn-danger" %>
+        <% else %>
+          <%= button_to "📅 Attend This Event", event_attendances_path(event_id: @event.id), method: :post, class: "btn btn-primary" %>
+        <% end %>
       <% end %>
-    </ul>
+    </div>
+
     <hr>
-  <% end %>
 
-  <h3>👥 Who's Coming (<%= @event.attendees.count %>)</h3>
-  <% if @event.attendees.any? %>
-    <ul>
-      <% @event.attendees.each do | attendee | %>
-        <li><%= link_to attendee.name, user_path(attendee) %></li>
+    <% if @event.creator == current_user %>
+      <h3>Invite Guests</h3>
+      <%= form_with(scope: :invitation, url: event_invitations_path(@event), local: true) do | f | %>
+        <div class="field">
+          <%= f.label :email, "Invitee's Email Address" %><br>
+          <%= f.email_field :email, placeholder: "guest@example.com", required: true %>
+          <%= f.submit "Send Invitation" %>
+        </div>
       <% end %>
-    </ul>
-  <% else %>
-    <p>No attendees yet. Be the first to join!</p>
-  <% end %>
 
+      <h4>Invited Guests Status</h4>
+      <ul>
+        <% @event.invited_users.each do | user | %>
+          <li>
+            <%= user.name %>
+            (<%= @event.attendees.include?(user) ? "✅ Attending" : "⏳ Pending RSVP" %>)
+          </li>
+        <% end %>
+      </ul>
+      <hr>
+    <% end %>
+
+    <h3>👥 Who's Coming (<%= @event.attendees.count %>)</h3>
+    <% if @event.attendees.any? %>
+      <ul>
+        <% @event.attendees.each do | attendee | %>
+          <li><%= link_to attendee.name, user_path(attendee) %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p>No attendees yet. Be the first to join!</p>
+    <% end %>
+
+    <% if @event.creator == current_user %>
+      <div class="creator-controls" style="background: #edf2f7; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+        <strong>Host Tools:</strong>
+        <%= link_to "Edit Event Details", edit_event_path(@event) %> |
+        <%= link_to "Delete Event", event_path(@event), 
+                    data: {turbo_method: :delete, turbo_confirm: "Are you sure you want to permanently delete this event?" }, 
+                    style: "color: #e53e3e;" %>
+      </div>
+    <% end %>
+  
+  </article>
+  
   <hr>
   <%= link_to "Back to All Events", root_path %>
-</article>
+<% end %>

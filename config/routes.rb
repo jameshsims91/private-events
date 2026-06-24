@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   devise_for :users
 
-  resources :events, only: [ :new, :create, :show, :index ] do
+  resources :events, only: [ :new, :create, :show, :index, :edit, :destroy ] do
     resources :invitations, only: [ :create ]
   end
 

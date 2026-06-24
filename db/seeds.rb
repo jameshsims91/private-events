@@ -1,9 +1,33 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+Invitation.destroy_all
+EventAttendance.destroy_all
+Event.destroy_all
+User.destroy_all
+
+puts "Seeding data..."
+
+host = User.create!(
+  name: "Host Jay"
+  email: "jaythenovice@gmail.com"
+  password: "Blakowl123"
+  password_confirmation: "Blakowl123"
+)
+
+guest = User.create!(
+  name: "Guest Bob",
+  email: "bob@example.com"
+  password: "password123"
+  password_confirmation: "password123"
+)
+
+event = host.created_events.create!(
+  title: "Secret Strategy Meeting"
+  date: Date.today + 5.days,
+  description: "Planning our master plan. Invite only!",
+  private: true
+)
+
+event.invited_users << guest
+
+puts "Seeding complete!
+puts "Logged in as Host: jaythenovice@gmail.com / Blakowl123"
+puts "Logged in as Guest: bob@example.com / password123"
