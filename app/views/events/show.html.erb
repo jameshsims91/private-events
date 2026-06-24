@@ -1,16 +1,13 @@
 <article class="event-details">
   <h1><%= @event.title %></h1>
-
   <p class="event-meta">
     <strong>Hosted by:</strong>
     <%= link_to @event.creator.name, user_path(@event.creator) %>
   </p>
-
   <p class="event-date">
     <strong>Date:</strong>
     <%= @event.date.strftime("%B %d, %Y") if @event.date %>
   </p>
-
   <% if @event.respond_to?(:description) && @event.description.present? %>
     <div class="event-description">
       <strong>Description:</strong>
@@ -18,6 +15,34 @@
     </div>
   <% end %>
 
+  <div class="rsvp-actions">
+    <% if user_signed_in? %>
+      <% if @event.creator == current_user %>
+        <p class="badge host">⭐ You are hosting this event</p>
+      <% elsif @event.attendees.include?(current_user) %>
+        <% attendance = @event.event_attendances.find_by(attendee: current_user) %>
+        <%= button_to "❌ Cancel Attendance", event_attendance_path(attendance), method: :delete, class: "btn btn-danger" %>
+      <% else %>
+        <%= button_to "📅 Attend This Event", event_attendances_path(event_id: @event.id), method: :post, class: "btn btn-primary" %>
+      <% end %>
+    <% else %>
+      <p><%= link_to "Sign in", new_user_session_path %> to RSVP for this event.</p>
+    <% end %>
+  </div>
+
   <hr>
-  <%= link_to "Back to Profile", user_path(@event.creator) %>
+
+  <h3>👥 Who's Coming (<%= @event.attendees.count %>)</h3>
+  <% if @event.attendees.any? %>
+    <ul>
+      <% @event.attendees.each do | attendee | %>
+        <li><%= link_to attendee.name, user_path(attendee) %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No attendees yet. Be the first to join!</p>
+  <% end %>
+
+  <hr>
+  <%= link_to "Back to All Events", root_path %>
 </article>

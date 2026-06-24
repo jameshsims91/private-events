@@ -1,10 +1,36 @@
-<h1>Current Events</h1>
-<% @events.each do | event | %>
-  <p>
-    <strong><%= link_to event.title, event_path(event) %></strong>
-    (Hosted by: <%= event.creator.name %> on <%= event.date.strftime("%B %d, %Y") if event.date %>
-  </p>
-<% end %>
+<h1>All Events</h1>
+<section class="events-section">
+  <h2>📅 Upcoming Events</h2>
+  <% if @upcoming_events.any? %>
+    <ul>
+      <% @upcoming_events.each do | event | %>
+        <li>
+          <strong><%= link_to event.title, event_path(event) %></strong>
+          (Hosted by: <%= event.creator.name %> on <%= event.date.strftime("%B %d, %Y") %>)
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No upcoming events scheduled.</p>
+  <% end %>
+</section>
+
+<hr>
+
+<section class="events-section">
+  <h2>⏳ Past Events</h2>
+  <% if @past_events.any? %>
+    <ul>
+      <% @past_events.each do | event | %>
+        <li>
+          <strong><%= link_to event.title, event_path(event) %></strong>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No past events found.</p>
+  <% end %>
+</section>
 
 <hr>
 

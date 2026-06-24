@@ -1,10 +1,12 @@
 Rails.application.routes.draw do
   root to: "events#index"
 
-  resources :events, only: [ :new, :create, :show ]
-  resources :users, only: [ :show ]
-
   devise_for :users
+
+  resources :events, only: [ :new, :create, :show, :index ]
+  resources :users, only: [ :show ]
+  resources :event_attendances, only: [ :create, :destroy ]
+
   get "events/index"
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
