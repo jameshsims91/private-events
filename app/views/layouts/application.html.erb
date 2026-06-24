@@ -24,6 +24,22 @@
   </head>
 
   <body>
+    <div class="flash-messages">
+      <% flash.each do | type, message | %>
+        <div class="flash-msg <%= type %>">
+          <% if message.respond_to?(:each) %>
+            <ul class="flash-list">
+              <% message.each do | msg | %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          <% else %>
+            <%= message %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+      
     <%= yield %>
   </body>
 </html>

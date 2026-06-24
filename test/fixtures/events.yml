@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  location: MyString
+  min_age: 1
+  date: 2026-06-24 09:40:34
+
+two:
+  title: MyString
+  location: MyString
+  min_age: 1
+  date: 2026-06-24 09:40:34

@@ -1,0 +1,4 @@
+<h1>Current Events</h1>
+<% @events.each do | event | %>
+  <p><%= event.name %> (Min Age: <%= event.min_age %>) </p>
+<% end %>
